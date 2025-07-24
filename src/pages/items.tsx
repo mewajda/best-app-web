@@ -3,7 +3,13 @@ import { useQuery } from '@tanstack/react-query';
 function Items() {
     const { data, isLoading, error } = useQuery({
         queryKey: ['cards'],
-        queryFn: () => fetch(`${import.meta.env.VITE_API_URL}/items`).then((res) => res.json())
+        queryFn: async () => {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/items`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch items');
+            }
+            return response.json();
+        }
     });
 
     if (isLoading) {
